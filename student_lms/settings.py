@@ -76,10 +76,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'student_db',       # your DB name
-        'USER': 'PostgreSQL 18',         # your DB user
-        'PASSWORD': 'ecnirp@123',             # your DB password
-        'HOST': 'localhost',             # or your DB host/IP
-        'PORT': '5432',                  # default Postgres port
+        'USER': 'postgres',         # your DB user
+        'PASSWORD': 'ecnirp@123',   # your DB password
+        'HOST': 'localhost',        # or your DB host/IP
+        'PORT': '5432',             # default Postgres port
     }
 }
 
