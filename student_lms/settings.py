@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'students',
 ]
 
+AUTH_USER_MODEL = 'students.CustomUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
