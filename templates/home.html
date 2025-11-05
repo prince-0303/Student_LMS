@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
-
 {% block title %}Home | Student LMS{% endblock %}
 
 {% block content %}
-  <div class="text-center mt-5">
-    <h1>Welcome to Student LMS 🎓</h1>
-    <p class="lead">A simple learning management system built with Django.</p>
-    <a href="/login/" class="btn btn-primary btn-lg mt-3">Get Started</a>
-  </div>
+<div class="text-center mt-5">
+  <h1 class="fw-bold">Welcome to Student LMS 🎓</h1>
+  <p class="lead text-muted mb-4">
+    A simple and efficient Learning Management System for students and admins.
+  </p>
+
+  {% if user.is_authenticated %}
+    {% if user.is_staff %}
+      <a href="{% url 'admin_dashboard' %}" class="btn btn-primary btn-lg">Go to Admin Dashboard</a>
+    {% else %}
+      <a href="{% url 'student_dashboard' %}" class="btn btn-primary btn-lg">Go to My Dashboard</a>
+    {% endif %}
+  {% else %}
+    <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+    <a href="{% url 'register' %}" class="btn btn-primary btn-lg ms-2">Register</a>
+  {% endif %}
+</div>
 {% endblock %}

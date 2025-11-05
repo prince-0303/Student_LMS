@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Admin Dashboard</h2>
+    <a href="{% url 'add_student' %}" class="btn btn-success">
+      ➕ Add Student
+    </a>
+  </div>
+
+  <!-- Django server-side search form -->
+  <form method="GET" action="{% url 'admin_dashboard' %}" class="mb-4 d-flex">
+    <input 
+      type="text" 
+      name="q" 
+      class="form-control me-2" 
+      placeholder="Search students..." 
+      value="{{ request.GET.q }}"
+    >
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  {% if students %}
+    <div class="row" id="studentContainer">
+      {% for s in students %}
+        <div class="col-md-4 mb-4 student-card">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body text-center">
+              {% if s.profile_picture %}
+                <img src="{{ s.profile_picture.url }}" class="rounded-circle mb-3" width="80" height="80" alt="Profile">
+              {% else %}
+                <img src="{% static 'images/default.png' %}" class="rounded-circle mb-3" width="80" height="80" alt="Profile">
+              {% endif %}
+              <h5 class="card-title">{{ s.user.username }}</h5>
+              <p class="text-muted small">{{ s.user.email }}</p>
+              <p class="mb-0"><strong>Roll:</strong> {{ s.roll_number }}</p>
+              <p class="mb-0"><strong>Dept:</strong> {{ s.department }}</p>
+              <p><strong>Year:</strong> {{ s.year }}</p>
+              <div class="mt-2">
+                <a href="{% url 'edit_student' s.id %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                <a href="{% url 'delete_student' s.id %}" class="btn btn-sm btn-outline-danger"
+                   onclick="return confirm('Are you sure?');">Delete</a>
+
+                {% if s.user.is_active %}
+                  <a href="{% url 'block_student' s.id %}" class="btn btn-sm btn-outline-warning ms-1"
+                     onclick="return confirm('Block this student from logging in?');">Block</a>
+                {% else %}
+                  <a href="{% url 'unblock_student' s.id %}" class="btn btn-sm btn-outline-success ms-1"
+                     onclick="return confirm('Unblock this student to allow login?');">Unblock</a>
+                {% endif %}                  
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination controls -->
+    <nav aria-label="Page navigation" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if students.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ students.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        {% for num in students.paginator.page_range %}
+          {% if students.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if students.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ students.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% else %}
+    <div class="alert alert-info text-center">No students found.</div>
+  {% endif %}
+</div>
+{% endblock %}
